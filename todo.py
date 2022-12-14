@@ -11,6 +11,7 @@ from textual.widgets import Button, Footer, Header, Static, Label
 from textual.css.query import NoMatches
 
 from bs4 import BeautifulSoup
+from bs4.element import Tag
 
 try:
     from dotenv import load_dotenv
@@ -51,6 +52,25 @@ class TodosList(Static):
 class Details(Static):
     todo: reactive[Todo | None] = reactive(None)
 
+    def tag_to_rich(tag: Tag) -> str:
+        print(tag.name)
+
+        if tag.name is None:
+            return tag.string
+
+        children = "".join(
+            Details.tag_to_rich(child) for child in tag.children)
+
+        if tag.name == "strong":
+            return f"[bold]{children}[not bold]"
+        elif tag.name == "em":
+            return f"[italic]{children}[not italic]"
+        elif tag.name == "span" and tag.has_attr("style") and "".join(
+                tag["style"].split()) == "text-decoration:underline;":
+            return f"[underline]{children}[not underline]"
+        else:
+            return children
+
     def watch_todo(self, todo: Todo | None) -> None:
         if todo is not None:
             self.query_one("#course").update(todo.context_name)
@@ -69,10 +89,15 @@ class Details(Static):
 
             description = self.query_one("#description")
             if todo.assignment["description"] is not None:
-                text = BeautifulSoup(todo.assignment["description"],
-                                     features="html.parser").text
+                soup = BeautifulSoup(todo.assignment["description"],
+                                     features="html.parser")
+                rich_text = "".join(
+                    Details.tag_to_rich(tag) for tag in soup.children)
 
-                description.update(text)
+                print(soup.prettify())
+                print(rich_text)
+
+                description.update(rich_text)
             else:
                 description.update("")
 
