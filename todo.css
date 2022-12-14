@@ -15,12 +15,21 @@ Details {
   width: 3fr;
 }
 
-Details #course {
+Details #close {
+  border: none;
+}
+
+Details #title {
   text-style: bold;
 }
 
 Details #due-date {
   color: grey;
+}
+
+Details #description {
+  width: 100%;
+  border-top: grey dashed;
 }
 
 TodosList TodoNode {

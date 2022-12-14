@@ -32,7 +32,7 @@ if API_URL is None or API_TOKEN is None:
 class TodoNode(Button):
 
     def __init__(self, todo: Todo) -> None:
-        super().__init__(todo.assignment["name"])
+        super().__init__(todo.assignment["name"], classes="todo-node")
         self.todo = todo
 
 
@@ -76,7 +76,12 @@ class Details(Static):
             else:
                 description.update("")
 
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        if event.button.id == "close":
+            self.remove()
+
     def compose(self) -> ComposeResult:
+        yield Button("close", id="close")
         yield Label("", id="course")
         yield Label("", id="title")
         yield Label("", id="due-date")
@@ -88,13 +93,13 @@ class CanvasTodoApp(App):
     BINDINGS = [("d", "toggle_dark", "Toggle dark mode")]
 
     async def on_button_pressed(self, event: Button.Pressed) -> None:
-        try:
-            details = self.query_one("#details")
-        except NoMatches:
-            details = Details(id="details")
-            await self.mount(details)
-        print(details)
-        details.todo = event.button.todo
+        if "todo-node" in event.button.classes:
+            try:
+                details = self.query_one("#details")
+            except NoMatches:
+                details = Details(id="details")
+                await self.mount(details)
+            details.todo = event.button.todo
 
     def on_mount(self) -> None:
         canvas = Canvas(API_URL, API_TOKEN)
