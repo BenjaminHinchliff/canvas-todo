@@ -40,13 +40,15 @@ class TodoNode(Button):
 class TodosList(Static):
     todos: reactive[PaginatedList | None] = reactive(None)
 
-    async def watch_todos(self, todos: PaginatedList | None) -> None:
-        # am lazy use brute force
-        for node in self.query(".todo-node"):
-            node.remove()
-        if todos is not None:
-            for todo in todos:
-                self.mount(TodoNode(todo))
+    async def watch_todos(self, old_todos: PaginatedList | None,
+                          new_todos: PaginatedList | None) -> None:
+        if new_todos != old_todos:
+            # am lazy use brute force
+            for node in self.query(".todo-node"):
+                node.remove()
+            if new_todos is not None:
+                for todo in new_todos:
+                    self.mount(TodoNode(todo))
 
 
 class Details(Static):
@@ -63,9 +65,13 @@ class Details(Static):
             return f"[bold]{children}[not bold]"
         elif tag.name == "em":
             return f"[italic]{children}[not italic]"
-        elif tag.name == "span" and tag.has_attr("style") and "".join(
-                tag["style"].split()) == "text-decoration:underline;":
-            return f"[underline]{children}[not underline]"
+        elif tag.name == "span" and tag.has_attr("style"):
+            if tag["style"] == "text-decoration: underline;":
+                return f"[underline]{children}[not underline]"
+            elif tag["style"] == "text-decoration: line-through;":
+                return f"[strike]{children}[not strike]"
+            else:
+                return children
         else:
             return children
 
