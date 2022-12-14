@@ -1,0 +1,28 @@
+Screen {
+  layout: horizontal;
+}
+
+TodosList, Details {
+  height: 100%;
+  border: solid orange;
+}
+
+TodosList {
+  width: 2fr;
+}
+
+Details {
+  width: 3fr;
+}
+
+Details #course {
+  text-style: bold;
+}
+
+Details #due-date {
+  color: grey;
+}
+
+TodosList TodoNode {
+  width: 100%;
+}
