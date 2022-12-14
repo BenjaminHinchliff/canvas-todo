@@ -40,11 +40,11 @@ class TodoNode(Button):
 class TodosList(Static):
     todos: reactive[PaginatedList | None] = reactive(None)
 
-    def watch_todos(self, todos: PaginatedList | None) -> None:
+    async def watch_todos(self, todos: PaginatedList | None) -> None:
         # am lazy use brute force
+        for node in self.query(".todo-node"):
+            node.remove()
         if todos is not None:
-            for child in self.children:
-                child.remove()
             for todo in todos:
                 self.mount(TodoNode(todo))
 
@@ -112,6 +112,8 @@ class CanvasTodoApp(App):
     CSS_PATH = "todo.css"
     BINDINGS = [("d", "toggle_dark", "Toggle dark mode")]
 
+    canvas: Canvas | None = None
+
     async def on_button_pressed(self, event: Button.Pressed) -> None:
         if "todo-node" in event.button.classes:
             try:
@@ -121,9 +123,14 @@ class CanvasTodoApp(App):
                 await self.mount(details)
             details.todo = event.button.todo
 
+    def update_todos(self) -> None:
+        if self.canvas is None:
+            self.canvas = Canvas(API_URL, API_TOKEN)
+        self.query_one("#todos").todos = self.canvas.get_todo_items()
+
     def on_mount(self) -> None:
-        canvas = Canvas(API_URL, API_TOKEN)
-        self.query_one("#todos").todos = canvas.get_todo_items()
+        self.update_todos()
+        self.set_interval(60.0, self.update_todos)
 
     def compose(self) -> ComposeResult:
         yield Header()
