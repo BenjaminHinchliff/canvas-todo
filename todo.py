@@ -53,8 +53,6 @@ class Details(Static):
     todo: reactive[Todo | None] = reactive(None)
 
     def tag_to_rich(tag: Tag) -> str:
-        print(tag.name)
-
         if tag.name is None:
             return tag.string
 
@@ -93,9 +91,6 @@ class Details(Static):
                                      features="html.parser")
                 rich_text = "".join(
                     Details.tag_to_rich(tag) for tag in soup.children)
-
-                print(soup.prettify())
-                print(rich_text)
 
                 description.update(rich_text)
             else:
