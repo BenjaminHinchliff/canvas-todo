@@ -17,6 +17,7 @@ Obviously, since anyone could theoretically use this token and it is unscoped, p
 To add the environment variable, one option is a .env file containing something like:
 
 ```env
+export CANVAS_API_URL="[URL OF YOUR CANVAS INSTANCE (e.g. https://canvas.calpoly.edu/)]"
 export CANVAS_API_TOKEN="[YOUR API TOKEN HERE]"
 ```
 
@@ -31,5 +32,5 @@ source venv/bin/activate
 # install dependencies
 pip install -r requirements.txt
 # run the application
-python main.py
+python todo.py
 ```
