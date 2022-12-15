@@ -141,7 +141,6 @@ class CanvasTodoApp(App):
         self.set_interval(60.0, self.update_todos)
 
     def compose(self) -> ComposeResult:
-        yield Header()
         yield Footer()
         yield TodosList(id="todos")
 

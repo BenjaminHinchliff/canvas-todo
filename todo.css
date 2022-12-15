@@ -13,6 +13,7 @@ TodosList {
 
 Details {
   width: 3fr;
+  overflow: auto;
 }
 
 Details #close {
