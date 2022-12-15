@@ -1,8 +1,8 @@
 # Canvas TUI Todo List
 
-A small tool to fetch upcoming assignments from the Canvas API.
+A small TUI (gui in the terminal) to browse and view upcoming canvas assignments, automatically updated, without having to open canvas itself.
 
-This is still unfinished, but may still prove useful in its current state.
+By default, fetches new results every minute.
 
 ## Usage
 
