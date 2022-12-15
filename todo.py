@@ -9,7 +9,7 @@ from canvasapi.todo import Todo
 
 from textual.app import App, ComposeResult
 from textual.reactive import reactive
-from textual.widgets import Button, Footer, Header, Static, Label
+from textual.widgets import Button, Footer, Static, Label
 from textual.css.query import NoMatches
 
 from bs4 import BeautifulSoup
